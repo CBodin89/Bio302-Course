@@ -69,3 +69,27 @@ iris %>%  group_by(Species) %>% nest() %>%
   mutate(mod = map(data, ~lm(Sepal.Length ~ Sepal.Width, data= .))) %>% 
   mutate(coef = map(mod, broom::tidy)) %>% 
   unnest(coef)
+
+#Gather, spread
+
+iris %>% 
+  rownames_to_column() %>% 
+  gather(key = variable, value = measurement, -Species, -rowname) %>% 
+  group_by(Species, variable) %>% 
+  summarise(mean(measurement))
+
+x11()
+iris %>% 
+  rownames_to_column() %>% 
+  gather(key = variable, value = measurement, -Species, -rowname) %>% 
+  ggplot(aes(x = variable, y = measurement, fill = Species)) + geom_violin()
+
+#changing the data into indivudal names, species, variable and measurement.
+
+#merging two tables
+
+####Two table functions####
+#left_join, full_join, semi_join, anti_join
+
+####n table functions####
+#bind_rows, bind_cols, crossing
