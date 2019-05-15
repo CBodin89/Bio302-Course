@@ -1,5 +1,6 @@
 library("tidyverse")
 library("vegan")
+library("broom")
 
 
 %>% #<--- this percentage symbol thingy = ctrl+shift+m, this is called a pipe
@@ -53,6 +54,18 @@ iris %>% mutate(Species = toupper(Species))  #makes smaller letters bigger
 
 
 iris %>% group_by(Species) %>% 
-  mutate(mean_petal_length = mean(Petal.Length))
+  mutate(mean_petal_length = mean(Petal.Length)) %>% 
+  mutate(sd_petal_length = sd(Petal.Length)) %>% 
+  ungroup()
 
-change
+iris %>% arrange(Petal.Length)
+iris %>% arrange(desc(Petal.Length))
+
+iris %>% group_by(Species) %>%
+  arrange(Petal.Length) %>% 
+  slice(1:3) #Takes the top row (1), Next 3 (:3)
+
+iris %>%  group_by(Species) %>% nest() %>% 
+  mutate(mod = map(data, ~lm(Sepal.Length ~ Sepal.Width, data= .))) %>% 
+  mutate(coef = map(mod, broom::tidy)) %>% 
+  unnest(coef)
